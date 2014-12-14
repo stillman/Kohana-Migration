@@ -1,10 +1,10 @@
-<?php defined('SYSPATH') or die('No direct script access.');
+<?php
 
-class Task_Migrate_Up extends Stillman\Kohana\Minion\Task {
-
+class Task_Migrate_Up extends Stillman\Kohana\Minion\Task
+{
 	protected function _execute(array $params)
 	{
-		$all_migrations = array();
+		$all_migrations = [];
 
 		$applied_migrations = DB::select()
 			->from($this->_config['table_name'])
@@ -40,18 +40,18 @@ class Task_Migrate_Up extends Stillman\Kohana\Minion\Task {
 			catch (Exception $e)
 			{
 				echo "ERROR: ".$e->getMessage()."\n";
-				$result = FALSE;
+				$result = false;
 			}
 
-			if ($result !== TRUE)
+			if ($result !== true)
 			{
 				echo "Migration $file returned FALSE, exiting.\n";
 				return;
 			}
 			else
 			{
-				DB::insert($this->_config['table_name'], array('version', 'apply_time'))
-					->values(array($file, time()))
+				DB::insert($this->_config['table_name'], ['version', 'apply_time'])
+					->values([$file, time()])
 					->execute($this->_config['database_group']);
 
 				echo "Success\n";
@@ -59,7 +59,7 @@ class Task_Migrate_Up extends Stillman\Kohana\Minion\Task {
 		}
 	}
 
-	public function confirm($message, $default = FALSE)
+	public function confirm($message, $default = false)
 	{
 		echo $message.' (yes|no) [' . ($default ? 'yes' : 'no') . ']:';
 
@@ -72,5 +72,4 @@ class Task_Migrate_Up extends Stillman\Kohana\Minion\Task {
 		require_once $this->_config['path'].$migration.'.php';
 		return new $migration;
 	}
-
 }
